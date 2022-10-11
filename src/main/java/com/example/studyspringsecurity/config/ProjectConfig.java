@@ -1,44 +1,27 @@
 package com.example.studyspringsecurity.config;
 
-import com.example.studyspringsecurity.model.User;
-import com.example.studyspringsecurity.service.InMemoryUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.List;
+import javax.sql.DataSource;
 
 
 @Configuration
 @RequiredArgsConstructor
 public class ProjectConfig {
 
-    private final CustomAuthenticationProvider authenticationProvider;
-
     @Bean
-    public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-
-        authenticationManagerBuilder
-                .authenticationProvider(authenticationProvider);
-
-        return authenticationManagerBuilder.build();
-    }
-
-
-    @Bean
-    public UserDetailsService userDetailsService(){
-        User user = new User("Jung", "123456", "read");
-        List<UserDetails> users = List.of(user);
-        return new InMemoryUserDetailService(users);
+    public UserDetailsService userDetailsService(DataSource dataSource){
+        return new JdbcUserDetailsManager(dataSource);
     }
 
     @Bean
