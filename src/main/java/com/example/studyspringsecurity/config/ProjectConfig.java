@@ -20,8 +20,16 @@ import javax.sql.DataSource;
 public class ProjectConfig {
 
     @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource){
-        return new JdbcUserDetailsManager(dataSource);
+    public UserDetailsService userDetailsService(DataSource dataSource) {
+        String userByUsernameQuery = "select username, password, enabled from users where username = ?";
+        String authsByUserQuery = "select username, authority from authorities where  username = ?";
+
+        var userDetailsManager = new JdbcUserDetailsManager(dataSource);
+
+        userDetailsManager.setUsersByUsernameQuery(userByUsernameQuery);
+        userDetailsManager.setAuthoritiesByUsernameQuery(authsByUserQuery);
+
+        return userDetailsManager;
     }
 
     @Bean
