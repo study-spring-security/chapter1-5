@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -19,7 +19,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = String.valueOf(authentication.getCredentials());
 
         if ("jung".equals(username) && "123456".equals(password)) {
-            return new UsernamePasswordAuthenticationToken(username, password, Arrays.asList());
+            return new UsernamePasswordAuthenticationToken(username, password, List.of());
         }
 
         throw new AuthenticationCredentialsNotFoundException("Error in authentication!!");
