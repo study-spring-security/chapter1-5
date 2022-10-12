@@ -27,7 +27,12 @@ public class ProjectConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.httpBasic();
+        http.httpBasic(
+                c -> {
+                    c.realmName("OTHER");
+                    c.authenticationEntryPoint(new CustomEntryPoint());
+                }
+        );
 
         http.authorizeRequests()
                 .anyRequest()
