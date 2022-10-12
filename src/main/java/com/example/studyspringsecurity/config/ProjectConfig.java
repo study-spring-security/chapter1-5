@@ -34,7 +34,8 @@ public class ProjectConfig {
                 }
         );
 
-        http.formLogin();
+        http.formLogin()
+                .defaultSuccessUrl("/home", true);
 
         http.authorizeRequests()
                 .anyRequest()
