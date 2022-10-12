@@ -34,6 +34,8 @@ public class ProjectConfig {
                 }
         );
 
+        http.formLogin();
+
         http.authorizeRequests()
                 .anyRequest()
                 .authenticated();
