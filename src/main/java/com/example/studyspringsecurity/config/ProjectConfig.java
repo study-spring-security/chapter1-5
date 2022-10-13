@@ -1,5 +1,7 @@
 package com.example.studyspringsecurity.config;
 
+import com.example.studyspringsecurity.authenticationHandler.CustomAuthenticationFailureHandler;
+import com.example.studyspringsecurity.authenticationHandler.CustomAuthenticationSuccessHandler;
 import com.example.studyspringsecurity.config.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,12 +12,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 
-
 @Configuration
 @RequiredArgsConstructor
 public class ProjectConfig {
 
     private final CustomAuthenticationProvider customAuthenticationProvider;
+
+    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -27,15 +31,12 @@ public class ProjectConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.httpBasic(
-                c -> {
-                    c.realmName("OTHER");
-                    c.authenticationEntryPoint(new CustomEntryPoint());
-                }
-        );
 
         http.formLogin()
-                .defaultSuccessUrl("/home", true);
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                .and()
+                .httpBasic();
 
         http.authorizeRequests()
                 .anyRequest()
